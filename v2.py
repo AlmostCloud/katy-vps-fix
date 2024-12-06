@@ -110,7 +110,7 @@ async def regen_ssh_command(interaction: discord.Interaction, container_name: st
         return
 
     try:
-        exec_cmd = await asyncio.create_subprocess_exec("docker", "exec", container_id, "tmate", "-F",
+        exec_cmd = await asyncio.create_subprocess_exec("docker", "exec", container_id, "ssh", "-R $HOSTNAME:22:localhost:22", "serveo.net",
                                                         stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
     except subprocess.CalledProcessError as e:
         await interaction.response.send_message(embed=discord.Embed(description=f"Error executing tmate in Docker container: {e}", color=0xff0000))
@@ -133,7 +133,7 @@ async def start_server(interaction: discord.Interaction, container_name: str):
 
     try:
         subprocess.run(["docker", "start", container_id], check=True)
-        exec_cmd = await asyncio.create_subprocess_exec("docker", "exec", container_id, "tmate", "-F",
+        exec_cmd = await asyncio.create_subprocess_exec("docker", "exec", container_id, "ssh", "-R $HOSTNAME:22:localhost:22", "serveo.net",
                                                         stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
         ssh_session_line = await capture_ssh_session_line(exec_cmd)
         if ssh_session_line:
@@ -168,7 +168,7 @@ async def restart_server(interaction: discord.Interaction, container_name: str):
 
     try:
         subprocess.run(["docker", "restart", container_id], check=True)
-        exec_cmd = await asyncio.create_subprocess_exec("docker", "exec", container_id, "tmate", "-F",
+        exec_cmd = await asyncio.create_subprocess_exec("docker", "exec", container_id, "ssh", "-R $HOSTNAME:22:localhost:22", "serveo.net",
                                                         stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
         ssh_session_line = await capture_ssh_session_line(exec_cmd)
         if ssh_session_line:
@@ -268,7 +268,7 @@ async def create_server_task(interaction):
         return
 
     try:
-        exec_cmd = await asyncio.create_subprocess_exec("docker", "exec", container_id, "tmate", "-F",
+        exec_cmd = await asyncio.create_subprocess_exec("docker", "exec", container_id, "ssh", "-R $HOSTNAME:22:localhost:{container_port}", "serveo.net",
                                                         stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
     except subprocess.CalledProcessError as e:
         await interaction.followup.send(embed=discord.Embed(description=f"Error executing tmate in Docker container: {e}", color=0xff0000))
@@ -304,7 +304,7 @@ async def create_server_task_debian(interaction):
         return
 
     try:
-        exec_cmd = await asyncio.create_subprocess_exec("docker", "exec", container_id, "tmate", "-F",
+        exec_cmd = await asyncio.create_subprocess_exec("docker", "exec", container_id, "ssh", "-R $HOSTNAME:22:localhost:{container_port}", "serveo.net",
                                                         stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
     except subprocess.CalledProcessError as e:
         await interaction.followup.send(embed=discord.Embed(description=f"Error executing tmate in Docker container: {e}", color=0xff0000))
