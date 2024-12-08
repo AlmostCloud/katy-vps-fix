@@ -13,8 +13,8 @@ import asyncio
 from discord import app_commands
 
 TOKEN = '' # TOKEN HERE
-RAM_LIMIT = '2g'
-SERVER_LIMIT = 12
+RAM_LIMIT = '20g'
+SERVER_LIMIT = 10
 database_file = 'database.txt'
 
 intents = discord.Intents.default()
@@ -368,7 +368,7 @@ async def list_servers(interaction: discord.Interaction):
         embed = discord.Embed(title="Your Instances", color=0x00ff00)
         for server in servers:
             _, container_name, _ = server.split('|')
-            embed.add_field(name=container_name, value="Description: A server with 32GB RAM and 8 cores.", inline=False)
+            embed.add_field(name=container_name, value="Description: 20 gb ram & 6 cores.", inline=False)
         await interaction.response.send_message(embed=embed)
     else:
         await interaction.response.send_message(embed=discord.Embed(description="You have no servers.", color=0xff0000))
